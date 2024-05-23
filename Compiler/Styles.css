@@ -1,0 +1,274 @@
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  
+}
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 50px 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+}
+h5 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.btn {
+  flex: 1;
+  font-size: 16px;
+  padding: 10px 20px;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+#input-display {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f2f2f2;
+  transition: all 0.3s ease;
+}
+.cfg-container {
+  display: none;
+}
+.show-cfg-btn {
+  cursor: pointer;
+  text-align: center;
+  color: #007bff;
+  margin-top: 10px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+}
+.show-cfg-btn:focus,
+.show-cfg-btn:hover {
+  text-decoration: underline;
+}
+
+.highlighted {
+  border-color: #edf2f7 !important;
+  background-color: #edf2f7 !important;
+  padding: 4px;
+  font-size: 1.2rem !important;
+}
+
+.big {
+  color: #0062ff !important;
+  font-size: 2rem !important;
+}
+
+.center-vertical {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.bg-light {
+  background-color: #edf2f7 !important;
+}
+
+.diagram {
+  width: 100%;
+  height: 100%;
+}
+
+.hover {
+  transition: all 0.15s ease-in;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.hover:hover {
+  transform: scale(1.2);
+}
+.hovered {
+  transform: scale(1.2);
+}
+
+.hovered > circle {
+  fill: #6c5ce7 !important;
+}
+.hovered > rect {
+  fill: #6c5ce7 !important;
+}
+
+.hovered > text {
+  stroke: white !important;
+  fill: white !important;
+}
+
+.transition-delay {
+  transition: all 0.15s ease-in !important;
+}
+
+.transition {
+  stroke: #6c5ce7 !important;
+  marker-end: url(#arrowBlue) !important;
+  z-index: 99999;
+}
+line.transition {
+  stroke: #6c5ce7 !important;
+  stroke-width: 2.6 !important;
+}
+path.transition {
+  stroke-width: 2.6 !important;
+}
+.blue {
+  fill: #6c5ce7 !important;
+  color: #6c5ce7 !important;
+}
+.red {
+  fill: #ff1100 !important;
+  color: #ff1100 !important;
+}
+
+.border-light {
+  border: 2px solid #dee2e6 !important;
+}
+
+.line {
+  stroke: #2d3748;
+  stroke-width: 2;
+  marker-end: url(#arrow);
+}
+.line-curved {
+  stroke: #2d3748;
+  stroke-width: 2;
+  marker-end: url(#arrow2) !important;
+  fill: none;
+}
+
+.arrow {
+  fill: #2d3748;
+}
+
+.line-text {
+  fill: #2d3748 !important;
+  font-weight: bold;
+}
+
+text {
+  pointer-events: none;
+  user-select: none;
+  text-anchor: middle;
+  fill: black;
+  font-size: 15;
+}
+
+circle {
+  stroke: #6c5ce7;
+  stroke-width: 2;
+  fill: rgb(248, 254, 255);
+}
+
+.contentParent {
+  height: 100vh !important;
+  max-width: 100vw;
+  flex-wrap: wrap;
+}
+
+rect {
+  stroke: #6c5ce7;
+  stroke-width: 3;
+  fill: rgb(248, 254, 255);
+  transform-origin: center;
+  transform-box: fill-box;
+  transform: rotate(45deg);
+}
+
+.box-text {
+  font-size: 0.8rem;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@media (max-width: 1366px) {
+  .contentParent {
+    flex-direction: column !important;
+    height: auto !important;
+  }
+  #content1 {
+    flex: 1;
+  }
+  #content2 {
+    flex: 1;
+  }
+  #pdaDiagramsvg {
+    height: 100vh !important;
+    transform: scale(1.3);
+    margin-top: 200px;
+  }
+  /* #pdaDiagramContainer {
+    height: 100vh !important;
+  } */
+
+  rect {
+    stroke: #6c5ce7;
+    stroke-width: 3;
+    fill: rgb(248, 254, 255);
+    transform-origin: center;
+    transform-box: fill-box;
+    transform: rotate(45deg);
+  }
+}
+@media (min-width: 1920px) {
+  #content2 {
+    padding-left: 0 !important;
+  }
+  #pdaDiagramsvg {
+    height: 100%;
+    transform: scale(1.3);
+    margin-top: 300px;
+  }
+}
+#content1 {
+  flex: 2;
+  height: 100% !important;
+}
+#content2 {
+  flex: 1;
+  width: 100% !important;
+}
+
+#content2-bottom {
+  flex: 2;
+}
+#pdaDiagramsvg {
+  height: 100%;
+}
+
+.xl {
+  font-size: 3vh;
+}
+
+.l {
+  font-size: 1.9vh;
+}

@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DFA Simulation</title>
+    <link rel="stylesheet" href="Styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 50px 20px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 36px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      h5 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .btn {
+        flex: 1;
+        font-size: 16px;
+        padding: 10px 20px;
+        margin-right: 10px;
+        margin-top: 5px;
+      }
+
+      #input-display {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f2f2f2;
+        transition: all 0.3s ease;
+      }
+      .cfg-container {
+        display: none;
+      }
+      .cfg-container-contents {
+        display: flex;
+      }
+      .show-cfg-btn {
+        cursor: pointer;
+        text-align: center;
+        color: #007bff;
+        margin-top: 10px;
+        background: none;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .show-cfg-btn:focus,
+      .show-cfg-btn:hover {
+        text-decoration: underline;
+      }
+
+      .pda-container {
+        display: none;
+      }
+      .show-pda-btn {
+        cursor: pointer;
+        text-align: center;
+        color: #007bff;
+        margin-top: 10px;
+        background: none;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .show-pda-btn:focus,
+      .show-pda-btn:hover {
+        text-decoration: underline;
+      }
+
+      .custom-margin {
+        margin-bottom: 10px;
+      }
+
+      .pda-container-img {
+        display: flex;
+        margin: 10px 4px;
+        max-width: 100%;
+        height: auto;
+        margin-left: 21px;
+        align-items: center;
+      }
+      .fab {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #6c5ce7;
+        color: white;
+        font-size: 30px;
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .overlay-img {
+        max-width: 100%;
+        max-height: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>DFA Simulation</h1>
+      <h5 class="center-vertical font-weight-bold custom-margin">
+        Regular Expression:
+      </h5>
+      <p
+        class="ml-2 rounded center-vertical font-weight-bold custom-margin"
+        id="regexLabel"
+      >
+        (aba+bab) (a+b)* (bab) (a+b)* (a+b+ab+ba) (a+b+aa)*
+      </p>
+      <div
+        class="d-flex flex-row align-items-center w-100 h-100 diagram justify-content-center"
+      >
+        <svg
+          width="100%"
+          height="40vh"
+          viewBox="0 0 780 360"
+          preserveAspectRatio="xMidYMid meet"
+          xmlns="http://www.w2.org/2000/svg"
+        >
+          <defs>
+            <marker
+              id="arrow"
+              markerWidth="10"
+              markerHeight="10"
+              refX="21"
+              refY="3"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+            </marker>
+            <marker
+              id="arrow2"
+              markerWidth="20"
+              markerHeight="20"
+              refX="8.5"
+              refY="3.5"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+            </marker>
+            <marker
+              id="arrow3"
+              markerWidth="10"
+              markerHeight="10"
+              refX="9"
+              refY="3"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0,0 L0,6 L9,3 z" class="arrow" />
+            </marker>
+            <marker
+              id="arrowBlue"
+              markerWidth="10"
+              markerHeight="10"
+              refX="21"
+              refY="3"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0,0 L0,6 L9,3 z" class="transition-delay blue" />
+            </marker>
+            <marker
+              id="arrowBlue2"
+              markerWidth="20"
+              markerHeight="20"
+              refX="8.5"
+              refY="3.5"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0,0 L0,6 L9,3 z" class="transition-delay blue" />
+            </marker>
+          </defs>
+          <g id="regexDiagram1">
+            <!-- q0 to q1 transition -->
+            <g>
+              <line
+                id="q0q1"
+                x1="50"
+                y1="50%"
+                x2="125"
+                y2="20%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="75"
+                y="33%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q0 to q1 transition -->
+            <!-- q0 to q2 transition -->
+            <g>
+              <line
+                id="q0q2"
+                x1="50"
+                y1="50%"
+                x2="125"
+                y2="80%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="75"
+                y="67%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q0 to q2 transition -->
+            <!-- q1 to q3 transition -->
+            <g>
+              <line
+                id="q1q3"
+                x1="125"
+                y1="20%"
+                x2="200"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="170"
+                y="33%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q1 to q3 transition -->
+            <!-- q1 to q4 transition -->
+            <g>
+              <line
+                id="q1q4"
+                x1="125"
+                y1="20%"
+                x2="275"
+                y2="20%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="200"
+                y="17%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q1 to q4 transition -->
+            <!-- q2 to q3 transition -->
+            <g>
+              <line
+                id="q2q3"
+                x1="125"
+                y1="80%"
+                x2="200"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="145"
+                y="67%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q2 to q3 transition -->
+            <!-- q2 to q5 transition -->
+            <g>
+              <line
+                id="q2q5"
+                x1="125"
+                y1="80%"
+                x2="275"
+                y2="80%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="200"
+                y="83%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q2 to q5 transition -->
+            <!-- q3 to q3 transition -->
+            <g>
+              <path
+                id="q3q3"
+                d="M 200 158 A 12000 200 0 0 1 216 190"
+                class="line-curved transition-delay"
+              />
+
+              <text
+                class="line-text"
+                x="265"
+                y="50%"
+                alignment-baseline="middle"
+              >
+                a,b
+              </text>
+            </g>
+            <!-- q3 to q3 transition -->
+            <!-- q4 to q3 transition -->
+            <g>
+              <line
+                id="q4q3"
+                x1="275"
+                y1="20%"
+                x2="200"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="260"
+                y="33%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q4 to q3 transition -->
+            <!-- q5 to q3 transition -->
+            <g>
+              <line
+                id="q5q3"
+                x1="275"
+                y1="80%"
+                x2="200"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="260"
+                y="67%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q5 to q3 transition -->
+            <!-- q5 to q6 transition -->
+            <g>
+              <line
+                id="q5q6"
+                x1="275"
+                y1="80%"
+                x2="350"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="330"
+                y="67%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q5 to q6 transition -->
+            <!-- q4 to q6 transition -->
+            <g>
+              <line
+                id="q4q6"
+                x1="275"
+                y1="20%"
+                x2="350"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="320"
+                y="33%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q4 to q6 transition -->
+            <!-- q6 to q7 transition -->
+            <g>
+              <line
+                id="q6q7"
+                x1="350"
+                y1="50%"
+                x2="425"
+                y2="20%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="380"
+                y="33%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q6 to q7 transition -->
+            <!-- q7 to q7 transition -->
+            <g>
+              <path
+                id="q7q7"
+                d="M 425 60 l 10 -10 A 1 2 0 0 0 410 50 1 -5 5"
+                class="line-curved transition-delay"
+              />
+              <text
+                class="line-text"
+                x="420"
+                y="3%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q7 to q7 transition -->
+            <!-- q6 to q8 transition -->
+            <g>
+              <line
+                id="q6q8"
+                x1="350"
+                y1="50%"
+                x2="425"
+                y2="80%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="375"
+                y="67%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q6 to q8 transition -->
+            <!-- q8 to q8 transition -->
+            <g>
+              <path
+                id="q8q8"
+                d="M 420 285 l 1 1 A 5 1 1 1 1 435 310 -15 -25"
+                class="line-curved transition-delay"
+              />
+
+              <text
+                class="line-text"
+                x="480"
+                y="88%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q8 to q8 transition -->
+            <!-- q9 to q7 transition -->
+            <g>
+              <line
+                id="q9q7"
+                x1="475"
+                y1="50%"
+                x2="425"
+                y2="20%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="460"
+                y="33%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q9 to q7 transition -->
+            <!-- q8 to q9 transition -->
+            <g>
+              <line
+                id="q8q9"
+                x1="425"
+                y1="80%"
+                x2="475"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="460"
+                y="67%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q8 to q9 transition -->
+            <!-- q7 to q8 transition -->
+            <g>
+              <line
+                id="q7q8"
+                x1="425"
+                y1="20%"
+                x2="425"
+                y2="80%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="410"
+                y="50%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q7 to q8 transition -->
+            <!-- q9 to q10 transition -->
+            <g>
+              <line
+                id="q9q10"
+                x1="475"
+                y1="50%"
+                x2="575"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="520"
+                y="47%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q9 to q10 transition -->
+            <!-- q10 to q11 transition -->
+            <g>
+              <line
+                id="q10q11"
+                x1="575"
+                y1="50%"
+                x2="650"
+                y2="20%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="600"
+                y="33%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q10 to q11 transition -->
+            <!-- q10 to q12 transition -->
+            <g>
+              <line
+                id="q10q12"
+                x1="575"
+                y1="50%"
+                x2="650"
+                y2="80%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="600"
+                y="67%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q10 to q12 transition -->
+            <!-- q11 to q11 transition -->
+            <g>
+              <path
+                id="q11q11"
+                d="M 650 60 l 10 -10 A 1 2 0 0 0 635 50 1 -5 5"
+                class="line-curved transition-delay"
+              />
+
+              <text
+                class="line-text"
+                x="645"
+                y="3%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q11 to q11 transition -->
+            <!-- q11 to q13 transition -->
+            <g>
+              <line
+                id="q11q13"
+                x1="650"
+                y1="20%"
+                x2="725"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="700"
+                y="33%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q11 to q13 transition -->
+            <!-- q12 to q13 transition -->
+            <g>
+              <line
+                id="q12q13"
+                x1="650"
+                y1="80%"
+                x2="725"
+                y2="50%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="700"
+                y="67%"
+                alignment-baseline="middle"
+              >
+                a
+              </text>
+            </g>
+            <!-- q12 to q13 transition -->
+            <!-- q12 to q12 transition -->
+            <g>
+              <path
+                id="q12q12"
+                d="M 645 285 l 1 1 A 5 1 1 1 1 665 310 -15 -25"
+                class="line-curved transition-delay"
+              />
+
+              <text
+                class="line-text"
+                x="710"
+                y="87%"
+                alignment-baseline="middle"
+              >
+                b
+              </text>
+            </g>
+            <!-- q12 to q12 transition -->
+            <!-- q13 to q13 transition -->
+            <g>
+              <path
+                id="q13q13"
+                d="M 725 158 A 12000 200 0 0 1 725 190"
+                class="line-curved transition-delay"
+              />
+
+              <text
+                class="line-text"
+                x="765"
+                y="43%"
+                alignment-baseline="middle"
+              >
+                a,b
+              </text>
+            </g>
+            <!-- q13 to q13 transition -->
+            <!-- q0 circle -->
+            <g id="q0" class="hover">
+              <circle r="25" cx="50" cy="50%" />
+              <text
+                x="50"
+                y="50%"
+                dy=".3em"
+                dx="-0.01em"
+                style="font-size: 1.5rem; font-weight: 700"
+              >
+                -
+              </text>
+            </g>
+            <!-- q0 circle -->
+            <!-- q1 circle -->
+            <g id="q1" class="hover">
+              <circle r="25" cx="125" cy="20%" />
+              <text x="125" y="20%" dy=".25em" dx="-.1em">q1</text>
+            </g>
+            <!-- q1 circle -->
+            <!-- q2 circle -->
+            <g id="q2" class="hover">
+              <circle r="25" cx="125" cy="80%" />
+              <text x="125" y="80%" dy=".25em" dx="-.1em">q2</text>
+            </g>
+            <!-- q2 circle -->
+            <!-- q3 circle -->
+            <g id="q3" class="hover">
+              <circle r="25" cx="200" cy="50%" />
+              <text x="200" y="50%" dy=".25em" dx="-.1em">q3</text>
+            </g>
+            <!-- q3 circle -->
+            <!-- q4 circle -->
+            <g id="q4" class="hover">
+              <circle r="25" cx="275" cy="20%" />
+              <text x="275" y="20%" dy=".25em" dx="-.1em">q4</text>
+            </g>
+            <!-- q4 circle -->
+            <!-- q5 circle -->
+            <g id="q5" class="hover">
+              <circle r="25" cx="275" cy="80%" />
+              <text x="275" y="80%" dy=".25em" dx="-.1em">q5</text>
+            </g>
+            <!-- q5 circle -->
+            <!-- q6 circle -->
+            <g id="q6" class="hover">
+              <circle r="25" cx="350" cy="50%" />
+              <text x="350" y="50%" dy=".25em" dx="-.1em">q6</text>
+            </g>
+            <!-- q6 circle -->
+            <!-- q7 circle -->
+            <g id="q7" class="hover">
+              <circle r="25" cx="425" cy="20%" />
+              <text x="425" y="20%" dy=".25em" dx="-.1em">q7</text>
+            </g>
+            <!-- q7 circle -->
+            <!-- q8 circle -->
+            <g id="q8" class="hover">
+              <circle r="25" cx="425" cy="80%" />
+              <text x="425" y="80%" dy=".25em" dx="-.1em">q8</text>
+            </g>
+            <g id="q9" class="hover">
+              <circle r="25" cx="475" cy="50%" />
+              <text x="475" y="50%" dy=".25em" dx="-.1em">q9</text>
+            </g>
+            <g id="q10" class="hover">
+              <circle r="25" cx="575" cy="50%" />
+              <text x="575" y="50%" dy=".25em" dx="-.1em">q10</text>
+            </g>
+            <g id="q11" class="hover">
+              <circle r="25" cx="650" cy="20%" />
+              <text x="650" y="20%" dy=".25em" dx="-.1em">+</text>
+            </g>
+            <g id="q12" class="hover">
+              <circle r="25" cx="650" cy="80%" />
+              <text x="650" y="80%" dy=".25em" dx="-.1em">+</text>
+            </g>
+            <g id="q13" class="hover">
+              <circle r="25" cx="725" cy="50%" />
+              <text
+                x="725"
+                y="50%"
+                dy=".3em"
+                dx="-0.01em"
+                style="font-size: 1.5rem; font-weight: 00"
+              >
+                +
+              </text>
+            </g>
+            <!-- q8 circle -->
+          </g>
+          <g id="regexDiagram2" class="d-none">
+            <!-- w0 to w1 transition -->
+            <g>
+              <line
+                id="w0w1"
+                x1="100"
+                y1="30%"
+                x2="200"
+                y2="30%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="150"
+                y="26%"
+                alignment-baseline="middle"
+              >
+                1,0
+              </text>
+            </g>
+            <!-- w0 to w1 transition -->
+            <!-- w1 to w2 transition -->
+            <g>
+              <line
+                id="w1w2"
+                x1="200"
+                y1="30%"
+                x2="325"
+                y2="30%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="260"
+                y="26%"
+                alignment-baseline="middle"
+              >
+                0
+              </text>
+            </g>
+            <!-- w1 to w2 transition -->
+            <!-- w1 to w3 transition -->
+            <g>
+              <line
+                id="w1w3"
+                x1="200"
+                y1="30%"
+                x2="400"
+                y2="70%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="300"
+                y="55%"
+                alignment-baseline="middle"
+              >
+                1
+              </text>
+            </g>
+            <!-- w1 to w3 transition -->
+            <!-- w2 to w3 transition -->
+            <g>
+              <line
+                id="w2w3"
+                x1="325"
+                y1="30%"
+                x2="400"
+                y2="70%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="368"
+                y="48%"
+                alignment-baseline="middle"
+              >
+                1
+              </text>
+            </g>
+            <!-- w2 to w3 transition -->
+            <!-- w2 to w4 transition -->
+            <g>
+              <line
+                id="w2w4"
+                x1="325"
+                y1="30%"
+                x2="475"
+                y2="30%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="395"
+                y="26%"
+                alignment-baseline="middle"
+              >
+                0
+              </text>
+            </g>
+            <!-- w2 to w4 transition -->
+            <!-- w3 to w5 transition -->
+            <g>
+              <line
+                id="w3w5"
+                x1="400"
+                y1="70%"
+                x2="525"
+                y2="80%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="455"
+                y="78%"
+                alignment-baseline="middle"
+              >
+                1
+              </text>
+            </g>
+            <!-- w3 to w5 transition -->
+            <!-- w3 to w6 transition -->
+            <g>
+              <line
+                id="w3w6"
+                x1="400"
+                y1="70%"
+                x2="625"
+                y2="60%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="511"
+                y="62%"
+                alignment-baseline="middle"
+              >
+                0
+              </text>
+            </g>
+            <!-- w3 to w6 transition -->
+            <!-- w4 to w3 transition -->
+            <g>
+              <line
+                id="w4w3"
+                x1="475"
+                y1="30%"
+                x2="400"
+                y2="70%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="450"
+                y="50%"
+                alignment-baseline="middle"
+              >
+                1
+              </text>
+            </g>
+            <!-- w4 to w3 transition -->
+            <!-- w4 to w7 transition -->
+            <g>
+              <line
+                id="w4w7"
+                x1="475"
+                y1="30%"
+                x2="700"
+                y2="30%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="585"
+                y="26%"
+                alignment-baseline="middle"
+              >
+                0
+              </text>
+            </g>
+            <!-- w4 to w7 transition -->
+            <!-- w5 to w6 transition -->
+            <g>
+              <line
+                id="w5w6"
+                x1="525"
+                y1="80%"
+                x2="625"
+                y2="60%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="575"
+                y="74%"
+                alignment-baseline="middle"
+              >
+                0
+              </text>
+            </g>
+            <!-- w5 to w6 transition -->
+            <!-- w5 to w7 transition -->
+            <g>
+              <path
+                id="w5w7"
+                d="M 525 280 A 85 85 0 0 0 710 130"
+                class="line-curved transition-delay"
+              />
+
+              <text
+                class="line-text"
+                x="685"
+                y="80%"
+                alignment-baseline="middle"
+              >
+                1
+              </text>
+            </g>
+            <!-- w5 to w7 transition -->
+            <!-- w6 to w4 transition -->
+            <g>
+              <line
+                id="w6w4"
+                x1="625"
+                y1="60%"
+                x2="475"
+                y2="30%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="550"
+                y="50%"
+                alignment-baseline="middle"
+              >
+                0
+              </text>
+            </g>
+            <!-- w6 to w4 transition -->
+            <!-- w6 to w7 transition -->
+            <g>
+              <line
+                id="w6w7"
+                x1="625"
+                y1="60%"
+                x2="700"
+                y2="30%"
+                class="line transition-delay"
+              />
+              <text
+                class="line-text"
+                x="650"
+                y="45%"
+                alignment-baseline="middle"
+              >
+                1
+              </text>
+            </g>
+            <!-- w6 to w7 transition -->
+            <!-- w7 to w7 transition -->
+            <g>
+              <path
+                id="w7w7"
+                d="M 700 95 l 10 -10 A 1 2 0 0 0 685 85 1 -5 5"
+                class="line-curved transition-delay"
+              />
+
+              <text
+                class="line-text"
+                x="695"
+                y="13%"
+                alignment-baseline="middle"
+              >
+                1,0
+              </text>
+            </g>
+            <!-- w7 to w7 transition -->
+
+            <!-- w0 circle -->
+            <g id="w0" class="hover">
+              <circle r="25" cx="100" cy="30%" />
+              <text
+                x="100"
+                y="30%"
+                dy=".35em"
+                dx="-0.01em"
+                style="font-size: 1.5rem; font-weight: 700"
+              >
+                -
+              </text>
+            </g>
+            <!-- w0 circle -->
+            <!-- w1 circle -->
+            <g id="w1" class="hover">
+              <circle r="25" cx="200" cy="30%" />
+              <text x="200" y="30%" dy=".25em" dx="-.1em">w1</text>
+            </g>
+            <!-- w1 circle -->
+            <!-- w2 circle -->
+            <g id="w2" class="hover">
+              <circle r="25" cx="325" cy="30%" />
+              <text x="325" y="30%" dy=".25em" dx="-.1em">w2</text>
+            </g>
+            <!-- w2 circle -->
+            <!-- w3 circle -->
+            <g id="w3" class="hover">
+              <circle r="25" cx="400" cy="70%" />
+              <text x="400" y="70%" dy=".25em" dx="-.1em">w3</text>
+            </g>
+            <!-- w3 circle -->
+            <!-- w4 circle -->
+            <g id="w4" class="hover">
+              <circle r="25" cx="475" cy="30%" />
+              <text x="475" y="30%" dy=".25em" dx="-.1em">w4</text>
+            </g>
+            <!-- w4 circle -->
+            <!-- w5 circle -->
+            <g id="w5" class="hover">
+              <circle r="25" cx="525" cy="80%" />
+              <text x="525" y="80%" dy=".25em" dx="-.1em">w5</text>
+            </g>
+            <!-- w5 circle -->
+            <!-- w6 circle -->
+            <g id="w6" class="hover">
+              <circle r="25" cx="625" cy="60%" />
+              <text x="625" y="60%" dy=".25em" dx="-.1em">w6</text>
+            </g>
+            <!-- w6 circle -->
+            <!-- w7 circle -->
+            <g id="w7" class="hover">
+              <circle r="25" cx="700" cy="30%" />
+              <text
+                x="700"
+                y="30%"
+                dy=".3em"
+                dx="-0.01em"
+                style="font-size: 1.5rem; font-weight: 500"
+              >
+                +
+              </text>
+            </g>
+            <!-- w7 circle -->
+          </g>
+        </svg>
+      </div>
+      <h5>Input String:</h5>
+      <input type="text" id="inputString" />
+      <div>
+        <h2 id="input-display"></h2>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-dark rounded" onclick="validate()">
+          Validate
+        </button>
+        <button
+          id="simulateBtn"
+          class="btn btn-dark rounded"
+          onclick="simulate()"
+        >
+          Simulate
+        </button>
+        <button
+          class="btn btn-dark rounded"
+          onclick="switchRegex()"
+          id="switchBtn"
+        >
+          Switch RegEx
+        </button>
+        <button onclick="clearInput()" class="btn btn-light rounded">
+          Clear String
+        </button>
+      </div>
+
+      <button class="show-cfg-btn" onclick="toggleCFG()">Show CFG</button>
+      <div class="cfg-container" id="cfgContent">
+        <h4
+          class="l font-weight-bold pb-0 justify-content-center highlighted rounded"
+          id="cfg1"
+        >
+          S -> abaA | babA<br />A -> aA | ba | B<br />B -> babC<br />C -> aC |
+          bC | D<br />D -> aE | bE | abE | baE<br />E -> aE | bE | aaE | ε<br />
+        </h4>
+        <h4
+          class="l font-weight-bold d-none pb0- highlighted rounded"
+          id="cfg2"
+        >
+          S -> 101A | 111A | 0A | 1A | 11A<br />
+          A -> 1A | 0A | 01A | B<br />
+          B -> 111C | 000C | 101C<br />
+          C -> 1C | 0C | ε<br />
+        </h4>
+      </div>
+      <button class="show-pda-btn" onclick="togglePDA()">Show PDA</button>
+      <div class="pda-container" id="pdaContent" style="display: none">
+        <div class="pda-container-img">
+          <img id="pdaDiagram1" src="1st.png" alt="Image 1" />
+          <img id="pdaDiagram2" class="d-none" src="2nd.png" alt="Image 2" />
+        </div>
+      </div>
+      <button class="fab" onclick="showImage()">?</button>
+
+      <div id="overlay" class="overlay">
+        <img src="UM.png" alt="Image" class="overlay-img" />
+      </div>
+    </div>
+    <script src="Script.js"></script>
+  </body>
+</html>
