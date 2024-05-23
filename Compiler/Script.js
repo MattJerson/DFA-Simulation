@@ -229,7 +229,7 @@ function validate() {
     } else {
       console.log("invalid");
       input_display.classList.add("red");
-      simulateBtn.disabled = true;
+      simulateBtn.disabled = false;
     }
   }
   else {
@@ -241,7 +241,7 @@ function validate() {
     } else {
       console.log("invalid");
       input_display.classList.add("red");
-      simulateBtn.disabled = true;
+      simulateBtn.disabled = false;
     }
   }
 }
